@@ -5,13 +5,15 @@ The Plow.
 An efficient Chia plot mover.
 
 Author: Luke Macken <phorex@protonmail.com>
+
+Contributions: Skully <javanaut@maveno.de> [https://discord.com/invite/AzK3Z3qbek]
+
 SPDX-License-Identifier: GPL-3.0-or-later
 """
-import sys
+
 import glob
 import shutil
 import random
-import urllib.request
 import asyncio
 import aionotify
 from pathlib import Path
@@ -26,6 +28,9 @@ SOURCES = []
 # Rsync destinations
 # Examples: ["/mnt/HDD1", "192.168.1.10::hdd1"]
 DESTS = []
+
+# Allow directories on the root filesystem as destination
+ALLOW_LOCAL_DESTINATIONS = False
 
 # Shuffle plot destinations. Useful when using many plotters to decrease the odds
 # of them copying to the same drive simultaneously.
@@ -104,7 +109,7 @@ async def plow(dest, plot_queue, loop):
             dest_path = Path(dest)
             if dest_path.exists():
                 # Make sure it's actually a mount, and not our root filesystem.
-                if not dest_path.is_mount():
+                if not dest_path.is_mount() and not ALLOW_LOCAL_DESTINATIONS:
                     print(f"Farm destination {dest_path} is not mounted. Trying again later.")
                     await plot_queue.put(plot)
                     await asyncio.sleep(SLEEP_FOR)
@@ -198,7 +203,12 @@ async def main(paths, loop):
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
+
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+
     try:
         loop.run_until_complete(main(SOURCES, loop))
     except KeyboardInterrupt:
