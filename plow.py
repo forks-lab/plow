@@ -6,7 +6,9 @@ An efficient Chia plot mover.
 
 Author: Luke Macken <phorex@protonmail.com>
 
-Contributions: Skully <javanaut@maveno.de> [https://discord.com/invite/AzK3Z3qbek]
+Contributions:
+Skully <javanaut@maveno.de> [https://discord.com/invite/AzK3Z3qbek]
+Christophe Bram [https://github.com/PanzerKunst]
 
 SPDX-License-Identifier: GPL-3.0-or-later
 """
