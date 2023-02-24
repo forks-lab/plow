@@ -36,7 +36,7 @@ ALLOW_LOCAL_DESTINATIONS = False
 
 # Shuffle plot destinations. Useful when using many plotters to decrease the odds
 # of them copying to the same drive simultaneously.
-SHUFFLE = True 
+SHUFFLE = True
 
 # Rsync bandwidth limiting
 BWLIMIT = None
@@ -105,7 +105,7 @@ async def plow(dest, plot_queue, loop):
     while True:
         try:
             plot = await plot_queue.get()
-            cmd = f"{RSYNC_CMD} {RSYNC_FLAGS} {plot} {dest}"
+            cmd = f"{RSYNC_CMD} {RSYNC_FLAGS} '{plot}' '{dest}'"
 
             # For local copies, we can check if there is enough space.
             dest_path = Path(dest)
